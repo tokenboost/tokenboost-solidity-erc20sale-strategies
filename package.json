@@ -1,0 +1,44 @@
+{
+  "name": "tokenboost-solidity-erc20sale-strategies",
+  "version": "1.0.0",
+  "description": "Solidity contracts for TokenBoost (ERC20Sale Strategies)",
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "build/contracts",
+    "contracts",
+    "test"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tokenboost/tokenboost-solidity-erc20sale-strategies"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "tokenboost",
+    "sale",
+    "raiser",
+    "boost"
+  ],
+  "author": "Yoonjae Yoo <yoonjae@dnext.co>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tokenboost/tokenboost-solidity-erc20sale-strategies/issues"
+  },
+  "homepage": "https://github.com/tokenboost/tokenboost-solidity-erc20sale-strategies",
+  "dependencies": {
+    "dotenv": "6.0.0",
+    "tokenboost-solidity": "1.1.0",
+    "tokenboost-solidity-erc20token": "1.0.0",
+    "tokenboost-solidity-erc20sale": "1.0.0",
+    "truffle-hdwallet-provider": "0.0.6",
+    "zeppelin-solidity": "^1.12.0"
+  }
+}

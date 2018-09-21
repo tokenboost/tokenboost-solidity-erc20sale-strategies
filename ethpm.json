@@ -1,0 +1,20 @@
+{
+  "package_name": "tokenboost-solidity-erc20sale-strategies",
+  "version": "1.0.0",
+  "description": "Solidity contracts for TokenBoost (ERC20Sale Strategies)",
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "tokenboost",
+    "sale",
+    "raiser",
+    "boost"
+  ],
+  "author": "Yoonjae Yoo <yoonjae@dnext.co>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "oraclize-api": "1.0.0"
+  }
+}
