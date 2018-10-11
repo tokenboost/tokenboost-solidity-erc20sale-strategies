@@ -46,7 +46,7 @@ contract AllowedTokenSupplyStrategyRenderer is Localizable {
 
     function _allowedTokensWidget(string _locale, AllowedTokenSupplyStrategy _strategy) private view returns (string json) {
         Elements.Element[] memory elements = new Elements.Element[](1);
-        uint256 allowedTokens = _strategy.sale().token().allowance(_strategy.sale().owner(), address(this));
+        uint256 allowedTokens = _strategy.sale().token().allowance(_strategy.sale().owner(), address(_strategy));
         DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
         uint256 decimals = uint256(erc20.decimals());
         elements[0] = Elements.Element(

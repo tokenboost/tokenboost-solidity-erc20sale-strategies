@@ -13,28 +13,14 @@ contract MintedTokenSupplyStrategyRenderer is Localizable {
     using AddressUtils for address;
     using StringUtils for string;
 
+    string public constant STRATEGY_ADDRESS = "strategy_address";
     string public constant SET_MINTER = "set_minter";
     string public constant SET_MINTER_SHORT_DESC = "set_minter_short_desc";
     string public constant SET_MINTER_LONG_DESC = "set_minter_long_desc";
     string public constant SET_MINTER_CONFIRM = "set_minter_confirm";
 
     function adminWidgets(string _locale, MintedTokenSupplyStrategy _strategy) public view returns (string) {
-        string memory json = "[";
-        uint length = 0;
-        string[1] memory widgets = [
-        _setMinterWidget(_locale, _strategy)
-        ];
-        for (uint i = 0; i < widgets.length; i++) {
-            string memory widget = widgets[i];
-            if (bytes(widget).length > 0) {
-                if (length > 0) {
-                    json = json.toSlice().concat(",".toSlice());
-                }
-                json = json.toSlice().concat(widget.toSlice());
-                length++;
-            }
-        }
-        return json.toSlice().concat("]".toSlice());
+        return string(abi.encodePacked("[", _setMinterWidget(_locale, _strategy), "]"));
     }
 
     function _setMinterWidget(string _locale, MintedTokenSupplyStrategy _strategy) private view returns (string json) {
@@ -42,8 +28,17 @@ contract MintedTokenSupplyStrategyRenderer is Localizable {
         if (token.hasRole(_strategy, token.ROLE_MINTER())) {
             return "";
         } else {
-            Elements.Element[] memory elements = new Elements.Element[](1);
+            Elements.Element[] memory elements = new Elements.Element[](2);
             elements[0] = Elements.Element(
+                true,
+                STRATEGY_ADDRESS,
+                "address",
+                resources[_locale][STRATEGY_ADDRESS],
+                address(_strategy).toString().quoted(),
+                Actions.empty(),
+                Tables.empty()
+            );
+            elements[1] = Elements.Element(
                 true,
                 SET_MINTER,
                 "button",
@@ -53,7 +48,7 @@ contract MintedTokenSupplyStrategyRenderer is Localizable {
                     true,
                     token,
                     "addMinter(address)",
-                    address(_strategy).toString().quoted(),
+                    '["strategy_address"]',
                     resources[_locale][SET_MINTER_CONFIRM]
                 ),
                 Tables.empty()

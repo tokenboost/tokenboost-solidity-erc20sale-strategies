@@ -58,7 +58,7 @@ contract WhitelistStrategyRenderer is Localizable {
             resources[_locale][WHITELIST],
             resources[_locale][WHITELIST_SHORT_DESC],
             resources[_locale][WHITELIST_LONG_DESC],
-            12,
+            8,
             elements
         );
         return widget.toJson();

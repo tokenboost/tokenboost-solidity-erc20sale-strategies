@@ -12,83 +12,59 @@ contract FixedPriceStrategyRenderer is Localizable {
     using strings for *;
 
     string public constant TOKEN_PRICE = "token_price";
+    string public constant TOKEN_PRICE_LABEL = "token_price_label";
     string public constant SHORT_DESC = "short_desc";
     string public constant LONG_DESC = "long_desc";
     string public constant UPDATE = "update";
     string public constant UPDATE_CONFIRM = "update_confirm";
 
-    function adminWidgets(string _locale, FixedPriceStrategy _strategy) public view returns (string) {
-        return userWidgets(_locale, _strategy);
+    function adminWidgets(string _locale, FixedPriceStrategy _strategy) public view returns (string json) {
+        return string(abi.encodePacked("[", _tokenPriceWidget(_locale, _strategy, true), "]"));
     }
 
-    function userWidgets(string _locale, FixedPriceStrategy _strategy) public view returns (string) {
-        if (_strategy.sale().activated()) {
-            string memory json = "[";
-            uint length = 0;
-            string[1] memory widgets = [
-            _tokenPriceWidget(_locale, _strategy)
-            ];
-            for (uint i = 0; i < widgets.length; i++) {
-                string memory widget = widgets[i];
-                if (bytes(widget).length > 0) {
-                    if (length > 0) {
-                        json = json.toSlice().concat(",".toSlice());
-                    }
-                    json = json.toSlice().concat(widget.toSlice());
-                    length++;
-                }
-            }
-            return json.toSlice().concat("]".toSlice());
+    function userWidgets(string _locale, FixedPriceStrategy _strategy) public view returns (string json) {
+        return string(abi.encodePacked("[", _tokenPriceWidget(_locale, _strategy, false), "]"));
+    }
+
+    function _tokenPriceWidget(string _locale, FixedPriceStrategy _strategy, bool _admin) private view returns (string json) {
+        if (_admin || _strategy.sale().activated()) {
+            Elements.Element[] memory elements = new Elements.Element[](1);
+            DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
+            string memory tokensPerEth = _strategy.tokensPerEth().toString().toSlice().concat(" ".toSlice()).toSlice().concat(erc20.symbol().toSlice());
+            elements[0] = Elements.Element(
+                true,
+                TOKEN_PRICE,
+                "text",
+                '1 ETH = '.toSlice().concat(tokensPerEth.toSlice()),
+                "null",
+                Actions.empty(),
+                Tables.empty()
+            );
+            Widgets.Widget memory widget = Widgets.Widget(
+                resources[_locale][TOKEN_PRICE],
+                resources[_locale][SHORT_DESC],
+                resources[_locale][LONG_DESC],
+                4,
+                elements
+            );
+            return widget.toJson();
         } else {
-            return "[]";
+            return "";
         }
     }
 
-    function _tokenPriceWidget(string _locale, FixedPriceStrategy _strategy) private view returns (string json) {
-        Elements.Element[] memory elements = new Elements.Element[](1);
-        DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
-        string memory tokensPerEth = _strategy.tokensPerEth().toString().toSlice().concat(" ".toSlice()).toSlice().concat(erc20.symbol().toSlice());
-        elements[0] = Elements.Element(
-            true,
-            TOKEN_PRICE,
-            "text",
-            '1 ETH = '.toSlice().concat(tokensPerEth.toSlice()),
-            "null",
-            Actions.empty(),
-            Tables.empty()
-        );
-        Widgets.Widget memory widget = Widgets.Widget(
-            resources[_locale][TOKEN_PRICE],
-            resources[_locale][SHORT_DESC],
-            resources[_locale][LONG_DESC],
-            4,
-            elements
-        );
-        return widget.toJson();
-    }
-
     function inputs(string _locale, FixedPriceStrategy _strategy) public view returns (string) {
-        Elements.Element[] memory elements = new Elements.Element[](3);
-        DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
+        Elements.Element[] memory elements = new Elements.Element[](2);
         elements[0] = Elements.Element(
             true,
             TOKEN_PRICE,
-            "number",
-            resources[_locale][TOKEN_PRICE],
+            "numberEdit",
+            resources[_locale][TOKEN_PRICE_LABEL],
             _strategy.tokensPerEth().toString(),
             Actions.empty(),
             Tables.empty()
         );
         elements[1] = Elements.Element(
-            true,
-            UPDATE,
-            "text",
-            erc20.symbol().toSlice().concat(" / ETH".toSlice()),
-            "null",
-            Actions.empty(),
-            Tables.empty()
-        );
-        elements[2] = Elements.Element(
             true,
             UPDATE,
             "button",

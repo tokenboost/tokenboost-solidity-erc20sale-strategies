@@ -15,9 +15,9 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
     using StringUtils for string;
 
     string public constant TRANSFER = "transfer";
-    string public constant TRANSFER_SHORT_DESC = "short_desc";
-    string public constant TRANSFER_LONG_DESC = "long_desc";
-    string public constant ADDRESS = "address";
+    string public constant TRANSFER_SHORT_DESC = "transfer_short_desc";
+    string public constant TRANSFER_LONG_DESC = "transfer_long_desc";
+    string public constant STRATEGY_ADDRESS = "strategy_address";
     string public constant AMOUNT = "amount";
     string public constant TRANSFER_CONFIRM = "update_confirm";
     string public constant UNSOLD_TOKENS = "unsold_tokens";
@@ -54,9 +54,9 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
         uint256 decimals = uint256(erc20.decimals());
         elements[0] = Elements.Element(
             true,
-            ADDRESS,
+            STRATEGY_ADDRESS,
             "address",
-            resources[_locale][ADDRESS],
+            resources[_locale][STRATEGY_ADDRESS],
             address(_strategy).toString().quoted(),
             Actions.empty(),
             Tables.empty()

@@ -23,22 +23,7 @@ contract CoinbaseUSDPriceStrategyRenderer is Localizable {
 
     function userWidgets(string _locale, CoinbaseUSDPriceStrategy _strategy) public view returns (string) {
         if (_strategy.sale().activated()) {
-            string memory json = "[";
-            uint length = 0;
-            string[1] memory widgets = [
-            _tokenPriceWidget(_locale, _strategy)
-            ];
-            for (uint i = 0; i < widgets.length; i++) {
-                string memory widget = widgets[i];
-                if (bytes(widget).length > 0) {
-                    if (length > 0) {
-                        json = json.toSlice().concat(",".toSlice());
-                    }
-                    json = json.toSlice().concat(widget.toSlice());
-                    length++;
-                }
-            }
-            return json.toSlice().concat("]".toSlice());
+            return string(abi.encodePacked("[", _tokenPriceWidget(_locale, _strategy), "]"));
         } else {
             return "[]";
         }

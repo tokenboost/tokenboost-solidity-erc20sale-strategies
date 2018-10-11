@@ -30,7 +30,7 @@ contract TimedStartFinishStrategy is ERC20SaleStrategy, Renderable {
     }
 
     function successful() public view returns (bool) {
-        return true;
+        return false;
     }
 
     function finished() public view returns (bool) {
@@ -38,11 +38,11 @@ contract TimedStartFinishStrategy is ERC20SaleStrategy, Renderable {
     }
 
     function purchasable(address _purchaser, uint256 _weiAmount) public view returns (bool) {
-        return true;
+        return false;
     }
 
     function tokenRate(address _purchaser, uint256 _weiAmount) public view returns (uint256) {
-        return 1;
+        return 0;
     }
 
     function supplyTokens(address _purchaser, uint256 _tokenAmount) public returns (bool) {
