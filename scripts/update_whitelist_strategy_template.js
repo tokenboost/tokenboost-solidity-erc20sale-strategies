@@ -8,7 +8,7 @@ const updateTemplate = require('./updateTemplate.js');
 
 module.exports = async function (callback) {
     try {
-        await updateTemplate(
+        let template = await updateTemplate(
             web3,
             "net.tokenboost.strategy.sale.erc20.whitelist",
             WhitelistStrategy,
@@ -17,9 +17,19 @@ module.exports = async function (callback) {
             ERC20SaleStrategyRegistry,
             3 * 10 ** 18,
             (await getAccounts(web3))[0],
-            'Whitelist',
-            'Only whitelisted addresses can participate into the sale.'
         );
+        await Promise.all([
+            await template.setNameAndDescription(
+                'en',
+                'Whitelist',
+                'Only whitelisted addresses can participate into the sale.'
+            ),
+            await template.setNameAndDescription(
+                'ko',
+                '화이트리스트',
+                "화이트리스트에 등록된 주소만 세일에 참여할 수 있습니다."
+            )
+        ]);
         callback();
     } catch (e) {
         callback(e);

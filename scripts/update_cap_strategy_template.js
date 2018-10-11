@@ -8,7 +8,7 @@ const updateTemplate = require('./updateTemplate.js');
 
 module.exports = async function (callback) {
     try {
-        await updateTemplate(
+        let template = await updateTemplate(
             web3,
             "net.tokenboost.strategy.sale.erc20.cap",
             CapStrategy,
@@ -16,10 +16,20 @@ module.exports = async function (callback) {
             ERC20SaleStrategyTemplate,
             ERC20SaleStrategyRegistry,
             2 * 10 ** 18,
-            (await getAccounts(web3))[0],
-            'Single Cap',
-            'When the cap is reached, your fundraising is finished.'
+            (await getAccounts(web3))[0]
         );
+        await Promise.all([
+            await template.setNameAndDescription(
+                'en',
+                'Single Cap',
+                'This strategy sets the maximum amount of ETH to raise(cap). When the cap is reached, your sale is finished.'
+            ),
+            await template.setNameAndDescription(
+                'ko',
+                '단일 캡',
+                '이 전략은 세일에서 모금할 최대 ETH 금액(캡)을 설정합니다. 해당 캡이 달성되면 세일은 종료됩니다.'
+            )
+        ]);
         callback();
     } catch (e) {
         callback(e);

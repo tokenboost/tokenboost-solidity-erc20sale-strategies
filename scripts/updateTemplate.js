@@ -9,8 +9,7 @@ String.prototype.toHex = function () {
 };
 
 module.exports = async function (web3, identifier, Contract, WidgetRenderer, Template, Registry,
-                                 price = 0, beneficiary = '0x00000000000000000000000000000000000000',
-                                 name = '', description = '') {
+                                 price = 0, beneficiary = '0x00000000000000000000000000000000000000') {
     let bytecode = Contract.bytecode;
     if (WidgetRenderer != null) {
         let renderer = await WidgetRenderer.deployed();
@@ -24,11 +23,12 @@ module.exports = async function (web3, identifier, Contract, WidgetRenderer, Tem
     let bytecodeHash = web3.sha3(bytecode, {encoding: 'hex'});
     console.log("bytecodeHash: " + bytecodeHash);
     let template = await Template.new(bytecodeHash, price, beneficiary);
-    await template.setNameAndDescription('', name, description);
     console.log(Template.contractName + ": " + template.address);
 
     let registry = await Registry.deployed();
     let versions = await registry.versionsOf(identifier);
-    let version = versions.length === 0 ? 0 : parseInt(versions[versions.length - 1]) + 1;
+    let version = versions.length === 0 ? 1 : parseInt(versions[versions.length - 1]) + 1;
     await registry.register(identifier, version, template.address);
+
+    return template;
 };
