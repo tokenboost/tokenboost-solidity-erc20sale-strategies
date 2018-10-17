@@ -1,6 +1,6 @@
 {
   "name": "tokenboost-solidity-erc20sale-strategies",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Solidity contracts for TokenBoost (ERC20Sale Strategies)",
   "directories": {
     "test": "test"
