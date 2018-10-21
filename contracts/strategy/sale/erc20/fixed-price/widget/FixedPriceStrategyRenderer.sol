@@ -3,12 +3,14 @@ pragma solidity ^0.4.24;
 import "zeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
 import "tokenboost-solidity/contracts/widget/Localizable.sol";
 import "tokenboost-solidity/contracts/widget/Widgets.sol";
+import "tokenboost-solidity/contracts/utils/StringUtils.sol";
 import "../FixedPriceStrategy.sol";
 
 contract FixedPriceStrategyRenderer is Localizable {
     using Widgets for Widgets.Widget;
     using Elements for Elements.Element;
     using UintUtils for uint;
+    using StringUtils for string;
     using strings for *;
 
     string public constant TOKEN_PRICE = "token_price";
@@ -30,13 +32,13 @@ contract FixedPriceStrategyRenderer is Localizable {
         if (_admin || _strategy.sale().activated()) {
             Elements.Element[] memory elements = new Elements.Element[](1);
             DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
-            string memory tokensPerEth = _strategy.tokensPerEth().toString().toSlice().concat(" ".toSlice()).toSlice().concat(erc20.symbol().toSlice());
+            string memory tokensPerEth = string(abi.encodePacked("1 ETH = ", _strategy.tokensPerEth().toString(), " ", erc20.symbol()));
             elements[0] = Elements.Element(
                 true,
                 TOKEN_PRICE,
                 "text",
-                '1 ETH = '.toSlice().concat(tokensPerEth.toSlice()),
-                "null",
+                "",
+                tokensPerEth.quoted(),
                 Actions.empty(),
                 Tables.empty()
             );

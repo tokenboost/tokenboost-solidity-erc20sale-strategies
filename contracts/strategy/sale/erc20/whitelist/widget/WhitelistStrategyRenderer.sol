@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "tokenboost-solidity/contracts/widget/Localizable.sol";
 import "tokenboost-solidity/contracts/widget/Widgets.sol";
+import "tokenboost-solidity/contracts/utils/StringUtils.sol";
 import "../WhitelistStrategy.sol";
 
 contract WhitelistStrategyRenderer is Localizable {
@@ -10,6 +11,7 @@ contract WhitelistStrategyRenderer is Localizable {
     using strings for *;
     using UintUtils for uint;
     using AddressUtils for address;
+    using StringUtils for string;
 
     string public constant WHITELIST = "whitelist";
     string public constant WHITELIST_SHORT_DESC = "whitelist_short_desc";
@@ -22,6 +24,11 @@ contract WhitelistStrategyRenderer is Localizable {
     string public constant ADD_TO_WHITELIST_LONG_DESC = "add_to_whitelist_long_desc";
     string public constant ADD = "add";
     string public constant ADD_CONFIRM = "add_confirm";
+    string public constant WHITELIST_STATUS = "whitelist_status";
+    string public constant WHITELIST_STATUS_SHORT_DESC = "whitelist_status_short_desc";
+    string public constant WHITELIST_STATUS_LONG_DESC = "whitelist_status_long_desc";
+    string public constant WHITELISTED = "whitelisted";
+    string public constant NOT_WHITELISTED = "not_whitelisted";
 
     function adminWidgets(string _locale, WhitelistStrategy _strategy) public view returns (string) {
         string memory json = "[";
@@ -138,7 +145,34 @@ contract WhitelistStrategyRenderer is Localizable {
     }
 
     function userWidgets(string _locale, WhitelistStrategy _strategy) public view returns (string json) {
-        return "[]";
+        if (_strategy.sale().activated()) {
+            string memory status;
+            if (_strategy.whitelisted(tx.origin)) {
+                status = resources[_locale][WHITELISTED];
+            } else {
+                status = resources[_locale][NOT_WHITELISTED];
+            }
+            Elements.Element[] memory elements = new Elements.Element[](1);
+            elements[0] = Elements.Element(
+                true,
+                WHITELIST_STATUS,
+                "text",
+                "",
+                status.quoted(),
+                Actions.empty(),
+                Tables.empty()
+            );
+            Widgets.Widget memory widget = Widgets.Widget(
+                resources[_locale][WHITELIST_STATUS],
+                resources[_locale][WHITELIST_STATUS_SHORT_DESC],
+                resources[_locale][WHITELIST_STATUS_LONG_DESC],
+                4,
+                elements
+            );
+            return string(abi.encodePacked("[", widget.toJson(), "]"));
+        } else {
+            return "[]";
+        }
     }
 
     function inputs(string _locale, WhitelistStrategy _strategy) public view returns (string) {

@@ -76,7 +76,7 @@ contract SoftHardCapStrategyRenderer is Localizable {
                 true,
                 SOFT_CAP,
                 "eth",
-                "null",
+                "",
                 _strategy.softCap().toString(),
                 Actions.empty(),
                 Tables.empty()
@@ -101,7 +101,7 @@ contract SoftHardCapStrategyRenderer is Localizable {
                 true,
                 HARD_CAP,
                 "eth",
-                "null",
+                "",
                 _strategy.hardCap().toString(),
                 Actions.empty(),
                 Tables.empty()
@@ -120,14 +120,14 @@ contract SoftHardCapStrategyRenderer is Localizable {
     }
 
     function _softCapLeftWidget(string _locale, SoftHardCapStrategy _strategy, bool _admin) private view returns (string json) {
-        if (_admin || !_strategy.sale().successful()) {
+        if (_admin || _strategy.sale().activated() && !_strategy.sale().successful()) {
             Elements.Element[] memory elements = new Elements.Element[](1);
             uint256 left = _strategy.softCap() - _strategy.sale().weiRaised();
             elements[0] = Elements.Element(
                 true,
                 SOFT_CAP_LEFT,
                 "eth",
-                resources[_locale][SOFT_CAP_LEFT],
+                "",
                 left.toString(),
                 Actions.empty(),
                 Tables.empty()
@@ -146,14 +146,14 @@ contract SoftHardCapStrategyRenderer is Localizable {
     }
 
     function _hardCapLeftWidget(string _locale, SoftHardCapStrategy _strategy, bool _admin) private view returns (string json) {
-        if (_admin || !_strategy.sale().finished()) {
+        if (_admin || _strategy.sale().activated() && !_strategy.sale().finished()) {
             Elements.Element[] memory elements = new Elements.Element[](1);
             uint256 left = _strategy.hardCap() - _strategy.sale().weiRaised();
             elements[0] = Elements.Element(
                 true,
                 HARD_CAP_LEFT,
                 "eth",
-                resources[_locale][HARD_CAP_LEFT],
+                "",
                 left.toString(),
                 Actions.empty(),
                 Tables.empty()

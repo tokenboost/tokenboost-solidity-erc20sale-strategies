@@ -46,7 +46,7 @@ contract TimedStartFinishStrategyRenderer is Localizable {
                 true,
                 STARTED_AT,
                 "timestamp",
-                "null",
+                "",
                 _strategy.startedAt().toString(),
                 Actions.empty(),
                 Tables.empty()
@@ -71,7 +71,7 @@ contract TimedStartFinishStrategyRenderer is Localizable {
                 true,
                 FINISHED_AT,
                 "timestamp",
-                "null",
+                "",
                 _strategy.finishedAt().toString(),
                 Actions.empty(),
                 Tables.empty()

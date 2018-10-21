@@ -84,7 +84,7 @@ contract ManualStartFinishStrategyRenderer is Localizable {
                 true,
                 STARTED_AT,
                 "timestamp",
-                "null",
+                "",
                 _strategy.startedAt().toString(),
                 Actions.empty(),
                 Tables.empty()
@@ -140,7 +140,7 @@ contract ManualStartFinishStrategyRenderer is Localizable {
                 true,
                 FINISHED_AT,
                 "timestamp",
-                "null",
+                "",
                 _strategy.finishedAt().toString(),
                 Actions.empty(),
                 Tables.empty()

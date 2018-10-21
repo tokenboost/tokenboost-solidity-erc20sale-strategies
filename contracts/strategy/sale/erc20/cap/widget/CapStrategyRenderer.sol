@@ -60,7 +60,7 @@ contract CapStrategyRenderer is Localizable {
     }
 
     function _capWidget(string _locale, CapStrategy _strategy, bool _admin) private view returns (string json) {
-        if (_admin || !_strategy.sale().finished()) {
+        if (_admin || _strategy.sale().activated() && !_strategy.sale().finished()) {
             Elements.Element[] memory elements = new Elements.Element[](1);
             elements[0] = Elements.Element(
                 true,
@@ -83,7 +83,7 @@ contract CapStrategyRenderer is Localizable {
     }
 
     function _capLeftWidget(string _locale, CapStrategy _strategy, bool _admin) private view returns (string json) {
-        if (_admin || !_strategy.sale().finished()) {
+        if (_admin || _strategy.sale().activated() && !_strategy.sale().finished()) {
             Elements.Element[] memory elements = new Elements.Element[](1);
             uint256 left = _strategy.cap() - _strategy.sale().weiRaised();
             elements[0] = Elements.Element(

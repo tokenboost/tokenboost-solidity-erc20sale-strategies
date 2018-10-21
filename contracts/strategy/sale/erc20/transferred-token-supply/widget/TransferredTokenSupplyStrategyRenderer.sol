@@ -17,6 +17,9 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
     string public constant TRANSFER = "transfer";
     string public constant TRANSFER_SHORT_DESC = "transfer_short_desc";
     string public constant TRANSFER_LONG_DESC = "transfer_long_desc";
+    string public constant TRANSFERRED_TOKENS = "transferred_tokens";
+    string public constant TRANSFERRED_TOKENS_SHORT_DESC = "transferred_tokens_short_desc";
+    string public constant TRANSFERRED_TOKENS_LONG_DESC = "transferred_tokens_long_desc";
     string public constant STRATEGY_ADDRESS = "strategy_address";
     string public constant AMOUNT = "amount";
     string public constant TRANSFER_CONFIRM = "update_confirm";
@@ -30,10 +33,11 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
         bool finished = _strategy.sale().finished();
         string memory json = "[";
         uint length = 0;
-        string[] memory widgets = new string[](finished ? 2 : 1);
-        widgets[0] = _transferWidget(_locale, _strategy);
+        string[] memory widgets = new string[](finished ? 3 : 2);
+        widgets[0] = _transferredTokensWidget(_locale, _strategy);
+        widgets[1] = _transferWidget(_locale, _strategy);
         if (finished) {
-            widgets[1] = _withdrawTokensWidget(_locale, _strategy);
+            widgets[2] = _withdrawTokensWidget(_locale, _strategy);
         }
         for (uint i = 0; i < widgets.length; i++) {
             string memory widget = widgets[i];
@@ -46,6 +50,29 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
             }
         }
         return json.toSlice().concat("]".toSlice());
+    }
+
+    function _transferredTokensWidget(string _locale, TransferredTokenSupplyStrategy _strategy) private view returns (string json) {
+        Elements.Element[] memory elements = new Elements.Element[](1);
+        DetailedERC20 erc20 = DetailedERC20(_strategy.sale().token());
+        uint256 decimals = uint256(erc20.decimals());
+        elements[0] = Elements.Element(
+            true,
+            AMOUNT,
+            "token".toSlice().concat(decimals.toString().toSlice()),
+            resources[_locale][AMOUNT],
+            erc20.balanceOf(_strategy).toString(),
+            Actions.empty(),
+            Tables.empty()
+        );
+        Widgets.Widget memory widget = Widgets.Widget(
+            resources[_locale][TRANSFERRED_TOKENS],
+            resources[_locale][TRANSFERRED_TOKENS_SHORT_DESC],
+            resources[_locale][TRANSFERRED_TOKENS_LONG_DESC],
+            4,
+            elements
+        );
+        return widget.toJson();
     }
 
     function _transferWidget(string _locale, TransferredTokenSupplyStrategy _strategy) private view returns (string json) {
@@ -80,7 +107,7 @@ contract TransferredTokenSupplyStrategyRenderer is Localizable {
                 true,
                 address(_strategy.sale().token()),
                 "transfer(address,uint256)",
-                '["address","amount"]',
+                '["strategy_address","amount"]',
                 resources[_locale][TRANSFER_CONFIRM]
             ),
             Tables.empty()

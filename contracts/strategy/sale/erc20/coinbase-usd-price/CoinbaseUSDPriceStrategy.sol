@@ -53,7 +53,7 @@ contract CoinbaseUSDPriceStrategy is ERC20SaleStrategy, Renderable, usingOracliz
     }
 
     function purchasable(address _purchaser, uint256 _weiAmount) public view returns (bool) {
-        return false;
+        return true;
     }
 
     function tokenRate(address _purchaser, uint256 _weiAmount) public view returns (uint256) {
