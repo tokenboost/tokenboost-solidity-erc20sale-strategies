@@ -22,7 +22,7 @@ module.exports = async function (callback) {
             await template.setNameAndDescription(
                 'en',
                 'Whitelist',
-                'Only whitelisted addresses can participate into the sale.'
+                'Only whitelisted addresses can participate in the sale.'
             ),
             await template.setNameAndDescription(
                 'ko',
